@@ -158,8 +158,8 @@ PUT /tasks
 GET /tasks/_mapping
 
 
-# NUMERIC DETECTION - only when index is being created (cannot update after index is created)
-# Without numeric detection, RELATED_AI_DATA_IDS_LIST will be detected as string. With, as long
+# 数字检测 - 仅在索引创建时进行（索引创建后无法更新）
+# 如果没有数字检测，RELATED_AI_DATA_IDS_LIST 将被检测为字符串。使用数字检测，只要
 PUT tasks
 {
   "mappings": {
@@ -202,14 +202,14 @@ PUT my-index-000001/
   }
 }
 
-# DOC_VALUES attribute for fields
-# Most fields are indexed by default, which makes them searchable. The inverted index allows queries to look up the search term in unique sorted list of terms, and from that immediately have access to the list of documents that contain the term.
+# 字段的 DOC_VALUES 属性
+# 大多数字段默认是被索引的，这使得它们可以被搜索。倒排索引允许查询在唯一排序的术语列表中查找搜索术语，并从中立即访问包含该术语的文档列表。
 
-# Sorting, aggregations, and access to field values in scripts requires a different data access pattern. Instead of looking up the term and finding documents, we need to be able to look up the document and find the terms that it has in a field.
+# 排序、聚合和在脚本中访问字段值需要不同的数据访问模式。我们需要能够查找文档并找到它在字段中拥有的术语，而不是查找术语并找到文档。
 
-# Doc values are the on-disk data structure, built at document index time, which makes this data access pattern possible. They store the same values as the _source but in a column-oriented fashion that is way more efficient for sorting and aggregations. Doc values are supported on almost all field types, with the notable exception of text and annotated_text fields.
+# 文档值是在文档索引时构建的磁盘数据结构，使这种数据访问模式成为可能。它们存储与 _source 相同的值，但以列为导向的方式存储，这对于排序和聚合来说效率更高。文档值几乎支持所有字段类型，值得注意的例外是文本和注释文本字段。
 
-## aggregations again -- not following the 8.15 documentation path, this below aggregation section should be elswhere
+## 再次聚合——不遵循 8.15 文档路径，下面的聚合部分应该在其他地方
 PUT /tasks
 {
     "mappings": {
@@ -237,8 +237,8 @@ GET /tasks/_search
   }
 }
 
-# Note dynamic mapping already creates a keyword field for RELATED_TASKS_NAMES_LIST, so no need to specify it again (a key can have multiple field types called multifield feature: which we will see later)
-# You can see the mapping and get aggregations on the field
+# 注意，动态映射已经为 RELATED_TASKS_NAMES_LIST 创建了一个关键字字段，所以不需要再次指定（一个键可以有多种字段类型，这被称为多字段特性：我们稍后会看到）
+# 你可以查看映射并在该字段上进行聚合
 GET tasks/_search
 {
   "aggs": {
